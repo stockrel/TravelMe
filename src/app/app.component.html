@@ -1,0 +1,22 @@
+<!-- <div class="container"> -->
+
+   <nav class="navbar navbar-dark">
+    <div class="nav navbar-nav">
+      <a class="navbar-brand pull-right" [routerLink]="['/']">
+        <img class="angular2icon" src="/assets/favicon.ico"> Digitrip
+      </a>
+      <a [routerLink]="['/']" class="nav-item nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <i class="fa fa-home"></i> Home
+      </a>
+      <a [routerLink]="['/transport']" class="nav-item nav-link" routerLinkActive="active">
+        <i class="fa fa-info-circle"></i> Transport
+      </a>
+      <a [routerLink]="['/accomodations']" class="nav-item nav-link" routerLinkActive="active">
+        <i class="fa fa-info-circle"></i> Accomodations
+      </a>
+    </div>
+  </nav> 
+
+  <router-outlet></router-outlet>
+
+<!-- </div> -->

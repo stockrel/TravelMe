@@ -1,0 +1,80 @@
+<div class="card" *ngIf="!isLoading">
+
+  <h4 class="card-header">Found flights ({{results.flights.length}})</h4>
+  <div class="card-block row">
+  	<div class="col-md-6 col-xs-6 col-lg-6">
+	  	<div class="box row">
+	  		<span class="col-md-12 col-xs-12 col-lg-12"><h5>Depart</h5></span>
+	  		<span class="col-md-6 col-xs-6 col-lg-6"><h1>{{query.singleDate.substring(8,10)}}</h1></span>
+	  		<span class="col-md-6 col-xs-6 col-lg-6"><h4>{{query.singleDate.substring(0,7)}}</h4></span>
+	  	</div>
+	</div>
+	<div class="col-md-6 col-xs-6 col-lg-6">
+	  	<div class="box row">
+	  		<span class="col-md-12 col-xs-12 col-lg-12"><h5>Return on</h5></span>
+	  		<span class="col-md-6 col-xs-6 col-lg-6"><h1>{{query.singleDate.substring(8,10)}}</h1></span>
+	  		<span class="col-md-6 col-xs-6 col-lg-6"><h4>{{query.singleDate | date:'mediumDate'}}</h4></span>
+	  	</div>
+	</div>
+  </div>
+  <div class="card-block">
+    <table class="table table-hover table-condensed">
+      <thead class="thead-default">
+        <tr>
+          <th>Price</th>
+          <th>Provider</th>
+          <th>Departure</th>
+          <th>Arrival</th>
+          <th>Carrier</th>
+          <th>Duration</th>
+          <th>Stopovers</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="results.flights.length === 0">
+        <tr>
+          <td colspan="6">No transport option found</td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="!isEditing">
+        <tr *ngFor="let flight of results.flights">
+          <td class="text-center"><span style="align:center;font-size:12px;text-align:left;">{{results.query.Currency}}</span><br/><span style="align:center;font-size:18px;text-align:left;"><b>{{flight.PricingOptions[0].Price}}</b></span></td>
+          <td><img src="{{flight.PricingOptions[0].Agents[0].ImageUrl}}"></td>
+          <td class="text-center"><span style="align:center;font-size:18px;text-align:left;">{{flight.OutboundLegId.OriginStation.Code}}</span><br/><span style="align:center;font-size:16px;text-align:left;"><b>{{flight.OutboundLegId.Departure.substring(11,16)}}</b></span></td>
+          <td class="text-center"><span style="align:center;font-size:18px;text-align:left;">{{flight.OutboundLegId.DestinationStation.Code}}</span><br/><span style="align:center;font-size:16px;text-align:left;"><b>{{flight.OutboundLegId.Arrival.substring(11,16)}}</b></span></td>
+          <td><img src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}"></td>
+          <td>{{flight.OutboundLegId.Duration}} min</td>
+          <td>{{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}</td>
+          
+          <!-- <td>
+            <button class="btn btn-sm btn-warning" (click)="enableEditing(option)"><i class="fa fa-pencil"></i> Edit</button> <button class="btn btn-sm btn-danger" (click)="deleteCat(cat)"><i class="fa fa-trash"></i> Delete</button>
+          </td> -->
+        </tr>  
+      </tbody>
+      <!-- <tbody *ngIf="isEditing">
+        <tr>
+          <td colspan="4">
+            <form class="form-inline" #form="ngForm" (ngSubmit)="editCat(cat)" style="display:inline">
+              <div class="form-group">
+                  <input class="form-control" type="text" name="name" [(ngModel)]="cat.name" placeholder="Name" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="number" name="age" [(ngModel)]="cat.age" placeholder="Age" min="0" required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="number" name="weight" [(ngModel)]="cat.weight" placeholder="Weight" step="any" min="0" required>
+              </div>
+              <button class="btn btn-sm btn-primary" type="submit" [disabled]="!form.form.valid"><i class="fa fa-floppy-o"></i> Save</button>
+            </form>
+            <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> Cancel</button>
+          </td>
+        </tr>
+      </tbody> -->
+    </table>
+    <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Message:</strong> {{infoMsg.body}}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+    /*margin-top: 15px;*/
+    margin-bottom: 10px;
+}
+
+.navbar-brand>img {
+    display: inline;
+    font-color: black;
+    background-color: grey;
+}
+.navbar {
+    font-color: black;
+    background-color: grey;
+}
+
+.alert {
+	z-index: 999;
+	position: fixed;
+	bottom: 15px;
+	left: 25%;
+	width: 50%;
+	opacity: 0.9;
+}
+
+.cover {
+	/*css for full size background image*/
+  background: url(./assets/maldives.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  
+  height: 500px;
+  width: 100%;
+  background-color: #060;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+ 
+}
+
+.searchbar {
+	display: inline;
+	width: 100%;
+	bottom: 0;
+	background-color: rgba(90, 90, 90, 0.5);; 
+}
+
+.header {
+  font-size:16px;
+  font-color:#A8A8A8;
+  top:10px;
+  left:10px;
+}
+
+
+/* Bootstrap tables rethink */
+table.table.table td {
+  background-color:#A8A8A8;
+  color: black;
+}
+table.table.table td.price {
+  text-align: center; 
+}
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #D0D0D0;
+  color: black;
+}
+
+/* Animated boxes */
+/* Create a simple white box, and add the shadow for the initial state */
+.box {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  transition: all 0.3s ease-in-out;
+}
+/* Create the hidden pseudo-element */
+/* include the shadow for the end state */
+.box::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease-in-out;
+}
+.box:hover {
+  -webkit-transform: scale(1.15, 1.15);
+  transform: scale(1.15, 1.15);
+}
+
+.box:hover::after {
+    opacity: 1;
+}
+
+
