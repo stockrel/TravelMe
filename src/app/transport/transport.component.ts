@@ -16,7 +16,8 @@ export class TransportComponent implements OnInit {
     to: "SXB",
     singleDate: "2016-12-07",
     return: false,
-    returnDate: null
+    returnDate: null,
+    flexible: 5
   };
   private results = {};
   private flights = [];

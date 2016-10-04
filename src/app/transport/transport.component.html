@@ -1,7 +1,7 @@
-<div class="card" *ngIf="!isLoading">
+ <div class="row" *ngIf="!isLoading">
 
-  <h4 class="card-header">Found flights ({{results.flights.length}})</h4>
-  <div class="card-block row">
+  <h4>Found flights ({{results.flights.length}})</h4>
+  <div class="row">
   	<div class="col-md-6 col-xs-6 col-lg-6">
 	  	<div class="box row">
 	  		<span class="col-md-12 col-xs-12 col-lg-12"><h5>Depart</h5></span>
@@ -17,59 +17,52 @@
 	  	</div>
 	</div>
   </div>
-  <div class="card-block">
-    <table class="table table-hover table-condensed">
-      <thead class="thead-default">
-        <tr>
-          <th>Price</th>
-          <th>Provider</th>
-          <th>Departure</th>
-          <th>Arrival</th>
-          <th>Carrier</th>
-          <th>Duration</th>
-          <th>Stopovers</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="results.flights.length === 0">
-        <tr>
-          <td colspan="6">No transport option found</td>
-        </tr>  
-      </tbody>
-      <tbody *ngIf="!isEditing">
-        <tr *ngFor="let flight of results.flights">
-          <td class="text-center"><span style="align:center;font-size:12px;text-align:left;">{{results.query.Currency}}</span><br/><span style="align:center;font-size:18px;text-align:left;"><b>{{flight.PricingOptions[0].Price}}</b></span></td>
-          <td><img src="{{flight.PricingOptions[0].Agents[0].ImageUrl}}"></td>
-          <td class="text-center"><span style="align:center;font-size:18px;text-align:left;">{{flight.OutboundLegId.OriginStation.Code}}</span><br/><span style="align:center;font-size:16px;text-align:left;"><b>{{flight.OutboundLegId.Departure.substring(11,16)}}</b></span></td>
-          <td class="text-center"><span style="align:center;font-size:18px;text-align:left;">{{flight.OutboundLegId.DestinationStation.Code}}</span><br/><span style="align:center;font-size:16px;text-align:left;"><b>{{flight.OutboundLegId.Arrival.substring(11,16)}}</b></span></td>
-          <td><img src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}"></td>
-          <td>{{flight.OutboundLegId.Duration}} min</td>
-          <td>{{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}</td>
-          
-          <!-- <td>
-            <button class="btn btn-sm btn-warning" (click)="enableEditing(option)"><i class="fa fa-pencil"></i> Edit</button> <button class="btn btn-sm btn-danger" (click)="deleteCat(cat)"><i class="fa fa-trash"></i> Delete</button>
-          </td> -->
-        </tr>  
-      </tbody>
-      <!-- <tbody *ngIf="isEditing">
-        <tr>
-          <td colspan="4">
-            <form class="form-inline" #form="ngForm" (ngSubmit)="editCat(cat)" style="display:inline">
-              <div class="form-group">
-                  <input class="form-control" type="text" name="name" [(ngModel)]="cat.name" placeholder="Name" required>
-              </div>
-              <div class="form-group">
-                <input class="form-control" type="number" name="age" [(ngModel)]="cat.age" placeholder="Age" min="0" required>
-              </div>
-              <div class="form-group">
-                <input class="form-control" type="number" name="weight" [(ngModel)]="cat.weight" placeholder="Weight" step="any" min="0" required>
-              </div>
-              <button class="btn btn-sm btn-primary" type="submit" [disabled]="!form.form.valid"><i class="fa fa-floppy-o"></i> Save</button>
-            </form>
-            <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> Cancel</button>
-          </td>
-        </tr>
-      </tbody> -->
-    </table>
+  <div class="row">
+    <ul class="nav nav-tabs nav-justified">
+      <li class="active"><a data-toggle="tab" href="#home">{{query.singleDate | date: 'MMM d'}}<br/><small>{{results.query.Currency}}</small>{{results.flights[0].PricingOptions[0].Price}}</a></li>
+      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    </ul>
+      
+    <div class="tab-content">
+      <table id="home" class="flat-table flat-table-flights tab-pane fade in active">
+        <thead>
+          <tr>
+            <th>Price</th>
+            <th>Provider</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Carrier</th>
+            <th>Duration</th>
+            <th>Stopovers</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="results.flights.length === 0">
+          <tr>
+            <td colspan="7">No transport option found</td>
+          </tr>  
+        </tbody>
+        <tbody *ngIf="!isEditing">
+          <tr *ngFor="let flight of results.flights">
+            <td class="row"><span class="currency">{{results.query.Currency}}</span><br/><span class="price"><b>{{flight.PricingOptions[0].Price}}</b></span></td>
+            <td ><img src="{{flight.PricingOptions[0].Agents[0].ImageUrl}}"></td>
+            <td class="row"><span class="airportcode">{{flight.OutboundLegId.OriginStation.Code}}</span><br/><span class="dates"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span></td>
+            <td class="row"><span class="airportcode">{{flight.OutboundLegId.DestinationStation.Code}}</span><br/><span class="dates"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span></td>
+            <td><img src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}"></td>
+            <td>{{(flight.OutboundLegId.Duration/60).toFixed(1)}}h</td>
+            <td>{{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}</td>      
+          </tr>  
+        </tbody>
+      </table>
+       <div id="menu1" class="tab-pane fade">
+        <h3>Menu 1</h3>
+        <p>Some content in menu 1.</p>
+      </div>
+      <div id="menu2" class="tab-pane fade">
+        <h3>Menu 2</h3>
+        <p>Some content in menu 2.</p>
+      </div>
+    </div>
     <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -77,4 +70,4 @@
       <strong>Message:</strong> {{infoMsg.body}}
     </div>
   </div>
-</div>
+</div> 

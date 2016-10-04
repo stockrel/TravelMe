@@ -16,6 +16,7 @@ import { ActivitiesComponent } from './activities/activities.component';
 import { AccomodationsComponent } from './accomodations/accomodations.component';
 import { TransportComponent } from './transport/transport.component';
 
+
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
     { path: 'about', component: AboutComponent },
