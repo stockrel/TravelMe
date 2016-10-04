@@ -19,13 +19,28 @@
   </div>
   <div class="row">
     <ul class="nav nav-tabs nav-justified">
-      <li class="active"><a data-toggle="tab" href="#home">{{query.singleDate | date: 'MMM d'}}<br/><small>{{results.query.Currency}}</small>{{results.flights[0].PricingOptions[0].Price}}</a></li>
-      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+      <template ngFor let-browse [ngForOf]="browseResults">
+        <li *ngIf="browse.OutboundLeg.DepartureDate.substring(0,10) == query.singleDate" class="active">
+          <a data-toggle="tab" href="#{{browse.OutboundLeg.DepartureDate}}">
+            {{browse.OutboundLeg.DepartureDate | date: 'MMM d'}}
+            <span class="currency">{{results.query.Currency}}</span>
+            <br/>
+            <span class="price"><b>{{browse.MinPrice}}</b></span>
+          </a>
+        </li>
+        <li *ngIf="browse.OutboundLeg.DepartureDate.substring(0,10) != query.singleDate">
+          <a data-toggle="tab" href="#main">
+            {{browse.OutboundLeg.DepartureDate | date: 'MMM d'}}
+            <span class="currency">{{results.query.Currency}}</span>
+            <br/>
+            <span class="price"><b>{{browse.MinPrice}}</b></span>
+          </a>
+        </li>
+      </template> 
     </ul>
       
     <div class="tab-content">
-      <table id="home" class="flat-table flat-table-flights tab-pane fade in active">
+      <table id="main" class="flat-table flat-table-flights tab-pane fade in active">
         <thead>
           <tr>
             <th>Price</th>

@@ -19,6 +19,7 @@ export class TransportComponent implements OnInit {
     returnDate: null,
     flexible: 5
   };
+  private browseResults = [];
   private results = {};
   private flights = [];
   private isLoading = true;
@@ -40,15 +41,22 @@ export class TransportComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.getFlights("CDG","LHR","2016-12-07",false,null);
-    console.log(this.flights)
+    this.getFlights(this.query);
+    this.browseFlights(this.query);
+    console.log(this.flights);
   }
 
-  getFlights(from,to,singleDate,withReturn,returnDate) {
+  getFlights(query) {
     this.transportService.getFlights(this.query).subscribe(
       data => this.results = data,
       error => console.log(error),
       () => this.isLoading = false
+    );
+  }
+  browseFlights(query) {
+    this.transportService.browseFlights(this.query).subscribe(
+      data => this.browseResults = data,
+      error => console.log(error)
     );
     console.log(this.flights)
   }

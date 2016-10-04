@@ -15,6 +15,10 @@ export class TransportService {
     return this.http.post("http://localhost:3001/flights/search/skyscanner", JSON.stringify(body), this.options).map(res => res.json());
   }
 
+  browseFlights(body) {
+    return this.http.post("http://localhost:3001/flights/browse/skyscanner", JSON.stringify(body), this.options).map(res => res.json());
+  }
+
   // addCat(cat) {
   //   return this.http.post("/cat", JSON.stringify(cat), this.options);
   // }
