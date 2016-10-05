@@ -47,6 +47,7 @@ export class TransportComponent implements OnInit {
   }
 
   getFlights(query) {
+    this.results.flights = [];
     this.transportService.getFlights(this.query).subscribe(
       data => this.results = data,
       error => console.log(error),
