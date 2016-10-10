@@ -1,6 +1,6 @@
  <div class="row" *ngIf="!isLoading">
 
-  <h4>Found flights ({{results.flights.length}})</h4>
+  <!-- <h4>Found flights ({{results.flights.length}})</h4> -->
   <div class="row">
   	<form class="form-inline">
       <div class="form-group">
@@ -23,75 +23,102 @@
         <label for="flexible">Flexible:</label>
         <input type="text" class="form-control" id="flexible" name="flexible" [(ngModel)]="query.flexible">
       </div>
-      <button class="btn btn-success" (click)="getFlights(query)">Search !</button>
+      <button class="btn btn-success" (click)="search()">Search !</button>
     </form>
   </div>
-  <div class="row">
+  <div *ngIf="init && searching" class="row">
+    <sk-fading-circle></sk-fading-circle>
+  </div>
+  <div *ngIf="init && !searching && results.flights.length != 0" class="row">
     <ul class="nav nav-tabs nav-justified">
       <template ngFor let-browse [ngForOf]="browseResults">
         <li *ngIf="browse.OutboundLeg.DepartureDate.substring(0,10) == query.singleDate" class="active">
           <a data-toggle="tab" href="#{{browse.OutboundLeg.DepartureDate}}">
             {{browse.OutboundLeg.DepartureDate | date: 'MMM d'}}
-            <span class="currency">{{results.query.Currency}}</span>
-            <br/>
-            <span class="price"><b>{{browse.MinPrice}}</b></span>
+            <span *ngIf="results.currency[0].SymbolOnLeft" class="price"><small>{{results.currency[0].Symbol}}</small><b>{{browse.MinPrice}}</b></span>
+            <span *ngIf="!results.currency[0].SymbolOnLeft" class="price"><b>{{browse.MinPrice}}</b><small>{{results.currency[0].Symbol}}</small></span>
           </a>
         </li>
         <li *ngIf="browse.OutboundLeg.DepartureDate.substring(0,10) != query.singleDate">
-          <a data-toggle="tab" href="#main">
+          <a data-toggle="tab" href="#main" (click)="switchDate(browse.OutboundLeg.DepartureDate.substring(0,10))">
             {{browse.OutboundLeg.DepartureDate | date: 'MMM d'}}
-            <span class="currency">{{results.query.Currency}}</span>
-            <br/>
-            <span class="price"><b>{{browse.MinPrice}}</b></span>
+            <span *ngIf="results.currency[0].SymbolOnLeft" class="price"><small>{{results.currency[0].Symbol}}</small><b>{{browse.MinPrice}}</b></span>
+            <span *ngIf="!results.currency[0].SymbolOnLeft" class="price"><b>{{browse.MinPrice}}</b><small>{{results.currency[0].Symbol}}</small></span>
           </a>
         </li>
       </template> 
     </ul>
       
     <div class="tab-content">
-      <table id="main" class="flat-table flat-table-flights tab-pane fade in active">
+      <div class="media flat-box" *ngFor="let flight of results.flights" >
+        <a class="media-left" href="#">
+          <img class="media-object" src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}" alt="{{flight.OutboundLegId.Carriers[0].Name}}">
+          {{flight.OutboundLegId.Carriers[0].Name}}
+        </a>
+        <div class="media-body row">
+          <h4 class="media-heading" *ngIf="results.currency[0].SymbolOnLeft" class="price"><small>{{results.query.Currency}}</small><b>{{flight.PricingOptions[0].Price}}</b></h4>
+          <h4 *ngIf="!results.currency[0].SymbolOnLeft" class="price"><b>{{flight.PricingOptions[0].Price}}</b><small>{{results.query.Currency}}</small></h4>
+          <div class="col-md-1 col-lg-1 col-xs-1">
+            <span class="dates"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span><span class="airportcode">{{flight.OutboundLegId.OriginStation.Code}}</span>
+          </div>
+          <div class="col-md-1 col-lg-1 col-xs-1">
+            <i class="icon-arrow-right"></i>
+          </div>
+          <div class="col-md-1 col-lg-1 col-xs-1">
+            <span class="dates"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span><span class="airportcode">{{flight.OutboundLegId.DestinationStation.Code}}</span>
+          </div>
+          <div class="col-md-1 col-lg-1 col-xs-1">
+            {{(flight.OutboundLegId.Duration/60).toFixed(1)}}h
+          </div>
+          <div class="col-md-1 col-lg-1 col-xs-1">
+            {{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}
+          </div>
+          </div>
+        </div>
+      </div>
+     
+
+      <!-- <table id="main" class="flat-table flat-table-flights tab-pane fade in active">
         <thead>
           <tr>
             <th>Price</th>
             <th>Provider</th>
-            <th>Departure</th>
-            <th>Arrival</th>
+            <th>Journey</th>
             <th>Carrier</th>
             <th>Duration</th>
             <th>Stopovers</th>
           </tr>
         </thead>
-        <tbody *ngIf="results.flights.length === 0">
+        <tbody *ngIf="init && !searching && results.flights.length === 0">
           <tr>
-            <td colspan="7">No transport option found</td>
+            <td colspan="6">No transport option found</td>
           </tr>  
         </tbody>
-        <tbody *ngIf="!isEditing">
+        <tbody *ngIf="init && results.flights.length != 0">
           <tr *ngFor="let flight of results.flights">
             <td class="row"><span class="currency">{{results.query.Currency}}</span><br/><span class="price"><b>{{flight.PricingOptions[0].Price}}</b></span></td>
             <td ><img src="{{flight.PricingOptions[0].Agents[0].ImageUrl}}"></td>
-            <td class="row"><span class="airportcode">{{flight.OutboundLegId.OriginStation.Code}}</span><br/><span class="dates"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span></td>
-            <td class="row"><span class="airportcode">{{flight.OutboundLegId.DestinationStation.Code}}</span><br/><span class="dates"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span></td>
+            <td class="row">
+              <span class="airportcode">{{flight.OutboundLegId.OriginStation.Code}}</span>
+              <br/>
+              <span class="dates"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span>
+              <i class="icon-arrow-right"></i>
+              <span class="airportcode">{{flight.OutboundLegId.DestinationStation.Code}}</span>
+              <br/>
+              <span class="dates"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span>
+            </td>
             <td><img src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}"></td>
             <td>{{(flight.OutboundLegId.Duration/60).toFixed(1)}}h</td>
             <td>{{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}</td>      
           </tr>  
         </tbody>
-      </table>
-       <div id="menu1" class="tab-pane fade">
-        <h3>Menu 1</h3>
-        <p>Some content in menu 1.</p>
-      </div>
-      <div id="menu2" class="tab-pane fade">
-        <h3>Menu 2</h3>
-        <p>Some content in menu 2.</p>
-      </div>
+      </table> -->
     </div>
-    <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
+    <!-- <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
       <strong>Message:</strong> {{infoMsg.body}}
-    </div>
-  </div>
+    </div> -->
+  <!-- </div> -->
 </div> 
