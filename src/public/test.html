@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Digitrip</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+      /* Flat tables */
+    .flat-box {
+        margin-bottom: 5px;
+        border-collapse:collapse;
+        font-family: 'Lato', Calibri, Arial, sans-serif;
+        border: none;
+        border-radius: 3px;
+       -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+        color: #f7f7f7;
+        padding: 0.7em 1em 0.7em 1.15em;
+        text-shadow: 0 0 1px rgba(255,255,255,0.1);
+        font-size: 1.4em;
+        background: #25383C;
+      }
+    .flat-box:hover {
+        background: rgba(0,16,20,0.19);
+      }
+
+  
+  </style>
+</head>
+<body>
+  <div class="media flat-box" *ngFor="let flight of results.flights" >
+    <a class="media-left" href="#">
+      <img class="media-object" src="http://s1.apideeplink.com/images/airlines/BA.png" alt="British Airways">
+      British Airways
+    </a>
+    <div class="media-body row">
+      <h4 class="media-heading"  class="price"><small>EUR</small><b>99</b></h4>
+      <div class="col-md-1 col-lg-1 col-xs-1">
+        <span class="dates"><b>10:40</b></span><span class="airportcode">CDG</span>
+      </div>
+      <div class="col-md-1 col-lg-1 col-xs-1">
+        <i class="icon-arrow-right"></i>
+      </div>
+      <div class="col-md-1 col-lg-1 col-xs-1">
+        <span class="dates"><b>11:30</b></span><span class="airportcode">LHR</span>
+      </div>
+      <div class="col-md-1 col-lg-1 col-xs-1">
+        3.4h
+      </div>
+      <div class="col-md-1 col-lg-1 col-xs-1">
+        Direct
+      </div>
+      </div>
+  </div>
+</body>
+</html>

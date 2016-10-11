@@ -101,5 +101,8 @@ export class TransportComponent implements OnInit {
     this.getFlights(this.query);
     this.browseFlights(this.query);
   }
+  floor(number){
+    return Math.floor(number);
+  }
 
 }

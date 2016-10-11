@@ -12,12 +12,16 @@
         <input type="text" class="form-control" id="to" name="to" [(ngModel)]="query.to">
       </div>
       <div class="form-group">
-        <label for="single">Single Date:</label>
-        <input type="text" class="form-control" id="single" name="single" [(ngModel)]="query.singleDate">
+        <label for="singleDate">Single Date:</label>
+        <input type="text" class="form-control" id="singleDate" name="singleDate" [(ngModel)]="query.singleDate">
       </div>
       <div class="form-group">
-        <label for="return">Return Date:</label>
-        <input type="text" class="form-control" id="return" name="return" [(ngModel)]="query.returnDate">
+        <label for="return">Return?</label>
+        <input type="checkbox" class="form-control" id="return" name="return" [(ngModel)]="query.return">
+      </div>
+      <div class="form-group">
+        <label for="returnDate">Return Date:</label>
+        <input type="text" class="form-control" id="returnDate" name="returnDate" [(ngModel)]="query.returnDate" [disabled]="!query.return">
       </div>
       <div class="form-group">
         <label for="flexible">Flexible:</label>
@@ -50,32 +54,71 @@
     </ul>
       
     <div class="tab-content">
-      <div class="media flat-box" *ngFor="let flight of results.flights" >
-        <a class="media-left" href="#">
-          <img class="media-object" src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}" alt="{{flight.OutboundLegId.Carriers[0].Name}}">
-          {{flight.OutboundLegId.Carriers[0].Name}}
-        </a>
-        <div class="media-body row">
-          <h4 class="media-heading" *ngIf="results.currency[0].SymbolOnLeft" class="price"><small>{{results.query.Currency}}</small><b>{{flight.PricingOptions[0].Price}}</b></h4>
-          <h4 *ngIf="!results.currency[0].SymbolOnLeft" class="price"><b>{{flight.PricingOptions[0].Price}}</b><small>{{results.query.Currency}}</small></h4>
-          <div class="col-md-1 col-lg-1 col-xs-1">
-            <span class="dates"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span><span class="airportcode">{{flight.OutboundLegId.OriginStation.Code}}</span>
+      <div class="panel panel-default" *ngFor="let flight of results.flights" >
+        <div class="panel-heading">
+          <h3 *ngIf="results.currency[0].SymbolOnLeft"><i class="fa fa-plane" aria-hidden="true"></i> <small>{{results.query.Currency}}</small><b>{{flight.PricingOptions[0].Price}}</b></h3>
+          <h3 *ngIf="!results.currency[0].SymbolOnLeft"><i class="fa fa-plane" aria-hidden="true"></i> <b>{{flight.PricingOptions[0].Price}}</b><small>{{results.query.Currency}}</small></h3>
+        </div>
+        <div class="panel-body row">
+          <div class="col-md-12">
+            <div class="col-md-12" style="background-color:#25383C;color:white;">
+              Outbound <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-2">
+              <img class="media-object" src="{{flight.OutboundLegId.Carriers[0].ImageUrl}}" alt="{{flight.OutboundLegId.Carriers[0].Name}}">
+            </div>
+            <div class="col-md-3">
+              <span class="dates col-md-12"><b>{{flight.OutboundLegId.Departure | date: 'HH:mm'}}</b></span>
+              <span class="col-md-12">{{flight.OutboundLegId.OriginStation.Name}} ({{flight.OutboundLegId.OriginStation.Code}})</span>
+            </div>
+            <div class="col-md-1">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-3">
+              <span class="dates col-md-12"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span>
+              <span class="col-md-12">{{flight.OutboundLegId.DestinationStation.Name}} ({{flight.OutboundLegId.DestinationStation.Code}})</span>
+            </div>
+            <div class="col-md-3">
+              <span class="col-md-12">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                <b>{{floor(flight.OutboundLegId.Duration/60).toFixed(0)}}h {{flight.OutboundLegId.Duration-floor(flight.OutboundLegId.Duration/60).toFixed(0)*60}}min</b>
+              </span>
+              <span class="col-md-12">{{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}</span>
+            </div>
           </div>
-          <div class="col-md-1 col-lg-1 col-xs-1">
-            <i class="icon-arrow-right"></i>
-          </div>
-          <div class="col-md-1 col-lg-1 col-xs-1">
-            <span class="dates"><b>{{flight.OutboundLegId.Arrival | date: 'HH:mm'}}</b></span><span class="airportcode">{{flight.OutboundLegId.DestinationStation.Code}}</span>
-          </div>
-          <div class="col-md-1 col-lg-1 col-xs-1">
-            {{(flight.OutboundLegId.Duration/60).toFixed(1)}}h
-          </div>
-          <div class="col-md-1 col-lg-1 col-xs-1">
-            {{flight.OutboundLegId.Stops.length > 0 ? flight.OutboundLegId.Stops.length+" stop(s)" : "Direct"}}
-          </div>
+          <div *ngIf="flight.InboundLegId" class="col-md-12">
+            <div class="col-md-12" style="background-color:#25383C;color:white;">
+              Inbound <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-2">
+              <img class="media-object" src="{{flight.InboundLegId.Carriers[0].ImageUrl}}" alt="{{flight.InboundLegId.Carriers[0].Name}}">
+            </div>
+            <div class="col-md-3">
+              <span class="dates col-md-12"><b>{{flight.InboundLegId.Departure | date: 'HH:mm'}}</b></span>
+              <span class="col-md-12">{{flight.InboundLegId.OriginStation.Name}} ({{flight.InboundLegId.OriginStation.Code}})</span>
+            </div>
+            <div class="col-md-1">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </div>
+            <div class="col-md-3">
+              <span class="dates col-md-12"><b>{{flight.InboundLegId.Arrival | date: 'HH:mm'}}</b></span>
+              <span class="col-md-12">{{flight.InboundLegId.DestinationStation.Name}} ({{flight.InboundLegId.DestinationStation.Code}})</span>
+            </div>
+            <div class="col-md-2">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              <span class="col-md-12">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                <b>{{floor(flight.InboundLegId.Duration/60).toFixed(0)}}h {{flight.InboundLegId.Duration-floor(flight.InboundLegId.Duration/60).toFixed(0)*60}}min</b>
+              </span>
+              <span class="col-md-12">{{flight.InboundLegId.Stops.length > 0 ? flight.InboundLegId.Stops.length+" stop(s)" : "Direct"}}</span>
+            </div>
           </div>
         </div>
+        <div class="panel-footer">
+          <a type="button" class="btn btn-success pull-right" href="{{flight.PricingOptions[0].DeeplinkUrl}}">Book now through <b>{{flight.PricingOptions[0].Agents[0].Name}}</b></a>
+        </div>
       </div>
+    </div>
      
 
       <!-- <table id="main" class="flat-table flat-table-flights tab-pane fade in active">
